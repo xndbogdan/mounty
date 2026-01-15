@@ -2,7 +2,9 @@
 
 A GTK4 application for managing SMB/CIFS network shares on Linux.
 
-![Screenshot](https://img.shields.io/badge/GTK-4.0-green) ![License](https://img.shields.io/badge/License-MIT-blue)
+I made this because I'm too lazy to manually edit fstab every time I need to mount a network share. Plus, as more novice users switch to Linux, this might actually prove useful.
+
+![Screenshot](screenshot.png)
 
 ## Features
 
@@ -31,3 +33,7 @@ python3 mounty.py
 ## License
 
 MIT
+
+---
+
+*I use Arch btw*
