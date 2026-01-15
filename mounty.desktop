@@ -8,3 +8,4 @@ Type=Application
 Categories=System;FileTools;Utility;
 Keywords=network;share;mount;smb;cifs;fstab;samba;nas;
 StartupNotify=true
+StartupWMClass=com.mounty.NetworkShareManager

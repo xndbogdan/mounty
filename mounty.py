@@ -18,6 +18,7 @@ class MountyApplication(Adw.Application):
         )
         
         GLib.set_application_name("Mounty")
+        Gtk.Window.set_default_icon_name("mounty")
     
     def do_activate(self):
         win = self.props.active_window
