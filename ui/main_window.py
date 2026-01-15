@@ -16,6 +16,8 @@ class MainWindow(Adw.ApplicationWindow):
         
         self.set_title("Mounty")
         self.set_default_size(900, 750)
+        self.set_size_request(900, 750)  # Minimum size
+        self.set_resizable(False)  # Fixed size, no maximize
         
         self._build_ui()
         self._load_css()
