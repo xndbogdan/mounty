@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+include mounty.desktop
+recursive-include ui *.py

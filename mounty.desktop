@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Mounty
+Comment=Network Share Manager - Mount and manage SMB/CIFS shares
+Exec=mounty
+Icon=mounty
+Terminal=false
+Type=Application
+Categories=System;FileTools;Utility;
+Keywords=network;share;mount;smb;cifs;fstab;samba;nas;
+StartupNotify=true

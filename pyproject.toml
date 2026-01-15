@@ -1,0 +1,28 @@
+[project]
+name = "mounty"
+version = "1.0.0"
+description = "A Linux GTK4 application for managing network shares with fstab integration"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Mounty Project"}]
+requires-python = ">=3.10"
+dependencies = [
+    "PyGObject>=3.42.0",
+]
+
+[project.scripts]
+mounty = "mounty:main"
+
+[project.gui-scripts]
+mounty = "mounty:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mounty*", "ui*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.py"]
