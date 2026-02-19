@@ -28,8 +28,10 @@ yay -S mounty
 
 ### From Source
 ```bash
-# Dependencies
+# Arch dependencies
 sudo pacman -S python-gobject gtk4 libadwaita smbclient cifs-utils polkit
+# Mint dependencies
+sudo apt install gir1.2-gtk-4.0 gir1.2-adw-1
 
 # Run
 python3 mounty.py
