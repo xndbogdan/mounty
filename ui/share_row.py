@@ -88,7 +88,12 @@ class ShareRow(Gtk.Box):
         self.edit_btn.set_sensitive(not self.share.automounted)
         self.edit_btn.connect("clicked", self._on_edit)
         button_row.append(self.edit_btn)
-        
+
+        self.duplicate_btn = Gtk.Button(label="Duplicate")
+        self.duplicate_btn.add_css_class("tinted-button")
+        self.duplicate_btn.connect("clicked", self._on_duplicate)
+        button_row.append(self.duplicate_btn)
+
         self.mount_btn = Gtk.Button()
         self.mount_btn.add_css_class("tinted-button")
         self.mount_btn.connect("clicked", self._on_mount_toggle)
@@ -154,6 +159,7 @@ class ShareRow(Gtk.Box):
         
         self.test_btn.set_sensitive(not loading)
         self.edit_btn.set_sensitive(not loading and not self.share.automounted)
+        self.duplicate_btn.set_sensitive(not loading)
         self.mount_btn.set_sensitive(not loading)
         self.automount_btn.set_sensitive(not loading)
         self.remove_btn.set_sensitive(not loading)
@@ -179,7 +185,16 @@ class ShareRow(Gtk.Box):
         from ui.share_dialog import ShareDialog
         dialog = ShareDialog(self.main_window, self.share_manager, self.share)
         dialog.present(self.main_window)
-    
+
+    def _on_duplicate(self, button):
+        from ui.share_dialog import ShareDialog
+        dialog = ShareDialog(self.main_window, self.share_manager)
+        dialog.switch_to_manual()
+        dialog.server_entry.set_text(self.share.server)
+        dialog.username_entry.set_text(self.share.username)
+        dialog.password_entry.set_text(self.share.password)
+        dialog.present(self.main_window)
+
     def _on_mount_toggle(self, button):
         self._set_loading(True)
         is_mounted = self.share_manager.is_mounted(self.share)

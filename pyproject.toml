@@ -1,6 +1,6 @@
 [project]
 name = "mounty"
-version = "1.0.0"
+version = "1.1.0"
 description = "A Linux GTK4 application for managing network shares with fstab integration"
 readme = "README.md"
 license = {text = "MIT"}

@@ -161,6 +161,112 @@ class ShareManager:
             if auth_file and os.path.exists(auth_file.name):
                 os.unlink(auth_file.name)
     
+    def discover_servers(self) -> tuple[bool, list[dict] | str]:
+        try:
+            result = subprocess.run(
+                ["avahi-browse", "-r", "-t", "_smb._tcp", "-p"],
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+
+            servers = {}
+            for line in result.stdout.splitlines():
+                if not line.startswith("="):
+                    continue
+                parts = line.split(";")
+                if len(parts) < 9:
+                    continue
+                name = parts[3]
+                hostname = parts[6]
+                address = parts[7]
+                if address and address not in servers:
+                    servers[address] = {
+                        "name": name,
+                        "hostname": hostname,
+                        "address": address
+                    }
+
+            if not servers:
+                return False, "No SMB servers found on the network"
+
+            return True, list(servers.values())
+
+        except subprocess.TimeoutExpired:
+            return False, "Server discovery timed out"
+        except FileNotFoundError:
+            return False, "avahi-browse not installed. Install with: sudo apt install avahi-utils"
+        except Exception as e:
+            return False, f"Discovery error: {str(e)}"
+
+    def scan_shares(self, server: str, username: str = "", password: str = "") -> tuple[bool, list[dict] | str]:
+        import tempfile
+        auth_file = None
+        try:
+            if username:
+                auth_file = tempfile.NamedTemporaryFile(mode='w', suffix='.auth', delete=False)
+                auth_file.write(f"username={username}\n")
+                auth_file.write(f"password={password}\n")
+                auth_file.close()
+                os.chmod(auth_file.name, 0o600)
+                cmd = ["smbclient", "-L", f"//{server}", "-A", auth_file.name, "-g"]
+            else:
+                cmd = ["smbclient", "-L", f"//{server}", "-N", "-g"]
+
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=15
+            )
+
+            output = result.stdout + result.stderr
+
+            # Parse shares from stdout (smbclient can list shares even with non-zero exit)
+            shares = []
+            for line in result.stdout.splitlines():
+                parts = line.split("|")
+                if len(parts) >= 3 and parts[0].strip() == "Disk":
+                    name = parts[1].strip()
+                    if not name.endswith("$"):
+                        shares.append({"name": name, "comment": parts[2].strip()})
+
+            if shares:
+                return True, shares
+
+            # No shares found — check for errors
+            error_lower = output.lower()
+            if "nt_status_logon_failure" in error_lower:
+                return False, "auth_error"
+            elif "nt_status_access_denied" in error_lower:
+                return False, "auth_error"
+            elif "nt_status_host_unreachable" in error_lower:
+                return False, "Cannot reach server"
+            elif "nt_status_connection_refused" in error_lower:
+                return False, "Connection refused"
+            elif "name or service not known" in error_lower or "no route to host" in error_lower:
+                return False, "Cannot resolve server"
+            elif "nt_status_" in error_lower:
+                match = re.search(r'(NT_STATUS_\w+)', output, re.IGNORECASE)
+                if match:
+                    return False, f"Error: {match.group(1)}"
+
+            if result.returncode != 0:
+                error_msg = output.strip()[-200:] if output.strip() else f"Exit code: {result.returncode}"
+                return False, f"Failed: {error_msg}"
+
+            return False, "No shares found on this server"
+
+        except subprocess.TimeoutExpired:
+            return False, "Connection timed out"
+        except FileNotFoundError:
+            return False, "smbclient not installed"
+        except Exception as e:
+            return False, f"Error: {str(e)}"
+        finally:
+            if auth_file and os.path.exists(auth_file.name):
+                os.unlink(auth_file.name)
+
     def is_mounted(self, share: Share) -> bool:
         try:
             result = subprocess.run(

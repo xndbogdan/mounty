@@ -41,11 +41,11 @@ class MountyApplication(Adw.Application):
     def _on_about(self, action, param):
         about = Adw.AboutDialog()
         about.set_application_name("Mounty")
-        about.set_version("1.0.0")
+        about.set_version("1.1.0")
         about.set_developer_name("Mounty Project")
         about.set_license_type(Gtk.License.MIT_X11)
         about.set_comments("A Linux application for managing network shares with fstab integration.")
-        about.set_website("https://github.com/example/mounty")
+        about.set_website("https://github.com/xndbogdan/mounty")
         about.set_application_icon("mounty")
         
         about.present(self.props.active_window)
