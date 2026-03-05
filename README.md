@@ -7,7 +7,7 @@
 
 A GTK4 application for managing SMB/CIFS network shares on Linux.
 
-I made this because I'm too lazy to manually edit fstab every time I need to mount a network share. Plus, as more novice users switch to Linux, this might actually prove useful.
+I made this because I'm too lazy to manually edit fstab every time I need to mount a network share. Plus, as more novice users switch to Linux, it might actually prove useful.
 
 ![Screenshot](screenshot.png)
 
