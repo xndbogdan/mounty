@@ -37,10 +37,16 @@ sudo apt install gir1.2-gtk-4.0 gir1.2-adw-1
 python3 mounty.py
 ```
 
+## Packaging
+
+Right now Mounty is only on the AUR. If you'd like to package it for other distros (Snap Store, PPA, Fedora COPR, etc.), please feel free to do so! I'd really appreciate it. I mostly use CachyOS, so I'm not familiar with other packaging ecosystems and I'd rather have someone experienced take care of it.
+
+## Contributing
+
+Contributions are welcome! I originally built this for myself, so I might have missed a few things. If you run into issues or have ideas for improvements, feel free to open an issue or submit a PR.
+
 ## License
 
 MIT
 
 ---
-
-*I use Arch btw*
